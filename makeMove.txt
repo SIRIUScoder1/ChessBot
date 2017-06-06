@@ -1,0 +1,15 @@
+Making a move
+
+1.make(move)    //integer move and and the pointer to position
+2.get the from,to, cap, from the move
+3.store the current position in the pos->history array
+4.move the current piece (array) from square -> to square
+5.if a capture was made, remove captured from the piece list
+6. update the fifty move rule, see if pawn was moved
+7.promotions
+8.Enpas sqaure capture
+9.set EnPas square if PStart  // if pawn moved then set the enpassent squares
+10.For all pieces added, moved removed, update   // write the function to move or add into the piecelist
+11.maintain the poskey (hashkey)
+12.Castle permission
+13.change the side, increment play and histPlay
