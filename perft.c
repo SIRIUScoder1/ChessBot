@@ -1,60 +1,62 @@
-#include "defi.h"
+// perft.c
+
+#include "defs.h"
 #include "stdio.h"
 
 long leafNodes;
 
-void Perft(int depth, S_BOARD *pos)   // counting the leaf nodes and calculate all the legal moves
-{
+void Perft(int depth, S_BOARD *pos) {  // counting the leaf nodes and calculate all the legal moves
+
         ASSERT(CheckBoard(pos));
 
-        if(depth == 0)
-        {
+        if(depth == 0) {
                 leafNodes++;
                 return;
         }
+
         S_MOVELIST list[1];
         GenerateAllMoves(pos,list);
 
         int MoveNum = 0;
-        for(MoveNum = 0; MoveNum < list->count; MoveNum++)
-        {
-                if(!MakeMove(pos,list->moves[MoveNum].move))
-                {
+        for(MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+
+                if ( !MakeMove(pos,list->moves[MoveNum].move))  {
                         continue;
                 }
-                Perft(depth-1,pos);
+                Perft(depth - 1, pos);
                 TakeMove(pos);
         }
+
         return;
 }
 
-void PerftTest(int depth, S_BOARD *pos)
-{
-    ASSERT(CheckBoard(pos));
 
-    PrintBoard(pos);
-    printf("\nStarting Test To Depth:%d\n",depth);  // depth of the move tree
+void PerftTest(int depth, S_BOARD *pos) {
 
-    leafNodes = 0;
-    int start = GetTimeMs();
-    S_MOVELIST list[1];
-    GenerateAllMoves(pos,list); //GenerateAllMoves posssible
-    int move;
-    int MoveNum = 0;
-    // printf("possible moves generated\n");
-    for(MoveNum = 0;MoveNum < list->count; MoveNum++)
-    {
-        move = list->moves[MoveNum].move;
-        if(!MakeMove(pos,move))
-        {
-            continue;
+        ASSERT(CheckBoard(pos));
+
+        PrintBoard(pos);
+        printf("\nStarting Test To Depth:%d\n",depth);  // depth of the move tree
+        leafNodes = 0;
+        int start = GetTimeMs();
+        S_MOVELIST list[1];
+        GenerateAllMoves(pos,list);
+
+        int move;
+        int MoveNum = 0;
+        for(MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+                move = list->moves[MoveNum].move;
+                if ( !MakeMove(pos,move))  {
+                        continue;
+                }
+                long cumnodes = leafNodes;
+                Perft(depth - 1, pos);
+                TakeMove(pos);
+                long oldnodes = leafNodes - cumnodes; //parents nodes only
+                printf("move %d : %s : %ld\n",MoveNum+1,PrMove(move),oldnodes);
         }
-        long cumnodes = leafNodes;
-        Perft(depth-1,pos);
-        TakeMove(pos);
-        long oldnodes = leafNodes - cumnodes; //parents nodes only
-        printf("move %d : %s : %ld moves generated\n",MoveNum+1,PrMove(move),oldnodes);
-    }
-    printf("\nTest Complete : %ld possible moves generated in %dms\n",leafNodes,(GetTimeMs()-start));
-    return;
+
+        printf("\nTest Complete : %ld nodes visited in %dms\n",leafNodes,GetTimeMs() - start);
+
+        return;
 }

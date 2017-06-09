@@ -1,35 +1,36 @@
-//hashkey.c
-#include "stdlib.h"
-#include "defi.h"
+// hashkeys.c
 #include "stdio.h"
-U64 GeneratePosKey(const S_BOARD *pos)
-{
+#include "defs.h"
+
+U64 GeneratePosKey(const S_BOARD *pos) {
+
         int sq = 0;
         U64 finalKey = 0;
-        int piece  = EMPTY;
+        int piece = EMPTY;
         //pieces
         //loop all the squares on the loop and set piece equal to value stored
         // at that squares
-        for(sq = 0; sq < BOARD_SQUARES; ++sq)
-        {
+        // pieces
+        for(sq = 0; sq < BRD_SQ_NUM; ++sq) {
                 piece = pos->pieces[sq];
-                if(piece != NO_SQ && piece != EMPTY && piece != OFFBOARD)
-                {
-                        ASSERT(piece >= wP && piece<= bK);
+                if(piece!=NO_SQ && piece!=EMPTY && piece != OFFBOARD) {
+                        ASSERT(piece>=wP && piece<=bK);
                         finalKey ^= PieceKeys[piece][sq];
                 }
         }
-        if(pos->side == WHITE)
-        {
+
+        if(pos->side == WHITE) {
                 finalKey ^= SideKey;
         }
-        if(pos->enPasSquare != NO_SQ)
-        {
-                ASSERT(pos->enPasSquare >= 0 && pos->enPasSquare < BOARD_SQUARES);
-                finalKey ^= PieceKeys[EMPTY][pos->enPasSquare];
+
+        if(pos->enPas != NO_SQ) {
+                ASSERT(pos->enPas>=0 && pos->enPas<BRD_SQ_NUM);
+                finalKey ^= PieceKeys[EMPTY][pos->enPas];
         }
 
-        ASSERT(pos->castlePermission >= 0 && pos->castlePermission <= 15)
-        finalKey ^= CastleKeys[pos->castlePermission];
+        ASSERT(pos->castlePerm>=0 && pos->castlePerm<=15);
+
+        finalKey ^= CastleKeys[pos->castlePerm];
+
         return finalKey;
 }
