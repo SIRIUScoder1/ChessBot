@@ -286,8 +286,6 @@ void ResetBoard(S_BOARD *pos) {
 
         pos->posKey = 0ULL;
         //current hashkeys
-        InitPvTable(pos->PvTable);
-
 }
 void PrintBoard(const S_BOARD *pos) {
 
