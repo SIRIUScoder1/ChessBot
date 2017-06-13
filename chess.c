@@ -11,7 +11,6 @@
 int main() {
 
         AllInit();
-
         Uci_Loop();
         // S_BOARD board[1];
         // InitPvTable(board->PvTable);

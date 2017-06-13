@@ -3,20 +3,18 @@
 #include "stdio.h"
 #include "defs.h"
 
-int CheckBoard(const S_BOARD *pos) {
-
+int CheckBoard(const S_BOARD *pos)
+{
         // go through the board and fill up the piece num, bigPieces, majPieces, minPieces, and material
 
-        int t_pceNum[13] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};   //temp array
+        int t_pceNum[13] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         int t_bigPce[2] = { 0, 0};
         int t_majPce[2] = { 0, 0};
         int t_minPce[2] = { 0, 0};
         int t_material[2] = { 0, 0};
-
         //check whether the values stored at pos is equal to the values that we fill
 
         int sq64,t_piece,t_pce_num,sq120,colour,pcount;
-
         //store the pawn bitboard
 
         U64 t_pawns[3] = {0ULL, 0ULL, 0ULL};
@@ -26,21 +24,24 @@ int CheckBoard(const S_BOARD *pos) {
         t_pawns[BOTH] = pos->pawns[BOTH];
 
         // check piece lists
-        for(t_piece = wP; t_piece <= bK; ++t_piece) {
-                for(t_pce_num = 0; t_pce_num < pos->pceNum[t_piece]; ++t_pce_num) {
+        for(t_piece = wP; t_piece <= bK; ++t_piece)
+        {
+                for(t_pce_num = 0; t_pce_num < pos->pceNum[t_piece]; ++t_pce_num)
+                {
                         sq120 = pos->pList[t_piece][t_pce_num];
                         ASSERT(pos->pieces[sq120]==t_piece);
                 }
         }
 
         // check piece count and other counters
-        for(sq64 = 0; sq64 < 64; ++sq64) {
+        for(sq64 = 0; sq64 < 64; ++sq64)
+        {
                 sq120 = SQ120(sq64);
                 // looking at the piece in the square
+                //check whether the values stored at pos is equal to the values that we fill
 
                 t_piece = pos->pieces[sq120];
                 // increamenting the number of piece type
-
                 t_pceNum[t_piece]++;
                 colour = PieceCol[t_piece];
                 // checking the  bigPieces, minPieces and majPieces
@@ -53,13 +54,13 @@ int CheckBoard(const S_BOARD *pos) {
         }
         // both temporary piece number array and pieces num is same
 
-        for(t_piece = wP; t_piece <= bK; ++t_piece) {
+        for(t_piece = wP; t_piece <= bK; ++t_piece)
+        {
                 ASSERT(t_pceNum[t_piece]==pos->pceNum[t_piece]);
         }
 
         // check bitboards count
         //checking the 120 based and the matching the wP
-
         pcount = CNT(t_pawns[WHITE]);
         ASSERT(pcount == pos->pceNum[wP]);
         pcount = CNT(t_pawns[BLACK]);
@@ -68,17 +69,20 @@ int CheckBoard(const S_BOARD *pos) {
         ASSERT(pcount == (pos->pceNum[bP] + pos->pceNum[wP]));
 
         // check bitboards squares
-        while(t_pawns[WHITE]) {
+        while(t_pawns[WHITE])
+        {
                 sq64 = POP(&t_pawns[WHITE]);
                 ASSERT(pos->pieces[SQ120(sq64)] == wP);
         }
 
-        while(t_pawns[BLACK]) {
+        while(t_pawns[BLACK])
+        {
                 sq64 = POP(&t_pawns[BLACK]);
                 ASSERT(pos->pieces[SQ120(sq64)] == bP);
         }
 
-        while(t_pawns[BOTH]) {
+        while(t_pawns[BOTH])
+        {
                 sq64 = POP(&t_pawns[BOTH]);
                 ASSERT( (pos->pieces[SQ120(sq64)] == bP) || (pos->pieces[SQ120(sq64)] == wP) );
         }
@@ -100,14 +104,17 @@ int CheckBoard(const S_BOARD *pos) {
         return TRUE;
 }
 
-void UpdateListsMaterial(S_BOARD *pos) {
+void UpdateListsMaterial(S_BOARD *pos)
+{
 
         int piece,sq,index,colour;
 
-        for(index = 0; index < BRD_SQ_NUM; ++index) {
+        for(index = 0; index < BRD_SQ_NUM; ++index)
+        {
                 sq = index;
                 piece = pos->pieces[index];
-                if(piece!=OFFBOARD && piece!= EMPTY) {
+                if(piece!=OFFBOARD && piece!= EMPTY)
+                {
                         colour = PieceCol[piece];
 
                         if( PieceBig[piece] == TRUE) pos->bigPce[colour]++;
@@ -115,11 +122,9 @@ void UpdateListsMaterial(S_BOARD *pos) {
                         if( PieceMaj[piece] == TRUE) pos->majPce[colour]++;
 
                         pos->material[colour] += PieceVal[piece];
-
                         //piece list
                         //plist[wp][0]; First white pawn white pawn a 0 index
                         //plist[wp][1]; //incrementing the pos->piecesNum[piece]
-
                         pos->pList[piece][pos->pceNum[piece]] = sq;
                         pos->pceNum[piece]++;
 
@@ -127,7 +132,7 @@ void UpdateListsMaterial(S_BOARD *pos) {
                         if(piece==bK) pos->KingSq[BLACK] = sq;
 
                         if(piece==wP) {
-                                SETBIT(pos->pawns[WHITE],SQ64(sq)); // setting bit for pawns and also converting the sq in 64 indexing from 120 indexing
+                                SETBIT(pos->pawns[WHITE],SQ64(sq));
                                 SETBIT(pos->pawns[BOTH],SQ64(sq));
                         } else if(piece==bP) {
                                 SETBIT(pos->pawns[BLACK],SQ64(sq));
@@ -137,7 +142,8 @@ void UpdateListsMaterial(S_BOARD *pos) {
         }
 }
 
-int ParseFen(char *fen, S_BOARD *pos) {
+int ParseFen(char *fen, S_BOARD *pos)
+{
 
         ASSERT(fen!=NULL);
         ASSERT(pos!=NULL);
@@ -152,9 +158,11 @@ int ParseFen(char *fen, S_BOARD *pos) {
 
         ResetBoard(pos);
 
-        while ((rank >= RANK_1) && *fen) {
+        while ((rank >= RANK_1) && *fen)
+        {
                 count = 1;
-                switch (*fen) {
+                switch (*fen)
+                {
                 case 'p': piece = bP; break;
                 case 'r': piece = bR; break;
                 case 'n': piece = bN; break;
@@ -193,10 +201,12 @@ int ParseFen(char *fen, S_BOARD *pos) {
                 }
                 //  FILE_A FILE_B FILE_C FILE_D FILE_E RANK_4
                 //  4RKQP/
-                for (i = 0; i < count; i++) {
+                for (i = 0; i < count; i++)
+                {
                         sq64 = rank * 8 + file;
                         sq120 = SQ120(sq64);
-                        if (piece != EMPTY) {
+                        if (piece != EMPTY)
+                        {
                                 pos->pieces[sq120] = piece;
                         }
                         file++;
@@ -209,11 +219,14 @@ int ParseFen(char *fen, S_BOARD *pos) {
         pos->side = (*fen == 'w') ? WHITE : BLACK;
         fen += 2;
 
-        for (i = 0; i < 4; i++) {
-                if (*fen == ' ') {
+        for (i = 0; i < 4; i++)
+        {
+                if (*fen == ' ')
+                {
                         break;
                 }
-                switch(*fen) {
+                switch(*fen)
+                {
                 case 'K': pos->castlePerm |= WKCA; break;
                 case 'Q': pos->castlePerm |= WQCA; break;
                 case 'k': pos->castlePerm |= BKCA; break;
@@ -227,7 +240,8 @@ int ParseFen(char *fen, S_BOARD *pos) {
         ASSERT(pos->castlePerm>=0 && pos->castlePerm <= 15);
         //checking the enpassent square whether its set or not
 
-        if (*fen != '-') {
+        if (*fen != '-')
+        {
                 file = fen[0] - 'a';
                 rank = fen[1] - '1';
 
@@ -243,33 +257,38 @@ int ParseFen(char *fen, S_BOARD *pos) {
 
         return 0;
 }
-
 //reset all values on the board to 0
 
-void ResetBoard(S_BOARD *pos) {
+void ResetBoard(S_BOARD *pos)
+{
 
         int index = 0;
 
-        for(index = 0; index < BRD_SQ_NUM; ++index) {
+        for(index = 0; index < BRD_SQ_NUM; ++index)
+        {
                 pos->pieces[index] = OFFBOARD;
         }
 
-        for(index = 0; index < 64; ++index) {
+        for(index = 0; index < 64; ++index)
+        {
                 pos->pieces[SQ120(index)] = EMPTY;
         }
 
-        for(index = 0; index < 2; ++index) {
+        for(index = 0; index < 2; ++index)
+        {
                 pos->bigPce[index] = 0;
                 pos->majPce[index] = 0;
                 pos->minPce[index] = 0;
                 pos->material[index] = 0;  //initially setting to zero for every piece
         }
 
-        for(index = 0; index < 3; ++index) {
+        for(index = 0; index < 3; ++index)
+        {
                 pos->pawns[index] = 0ULL;
         }
 
-        for(index = 0; index < 13; ++index) {
+        for(index = 0; index < 13; ++index)
+        {
                 pos->pceNum[index] = 0;
         }
 
@@ -286,16 +305,20 @@ void ResetBoard(S_BOARD *pos) {
 
         pos->posKey = 0ULL;
         //current hashkeys
+
 }
-void PrintBoard(const S_BOARD *pos) {
+void PrintBoard(const S_BOARD *pos)
+{
 
         int sq,file,rank,piece;
 
         printf("\nGame Board:\n\n");
 
-        for(rank = RANK_8; rank >= RANK_1; rank--) {
+        for(rank = RANK_8; rank >= RANK_1; rank--)
+        {
                 printf("%d  ",rank+1);
-                for(file = FILE_A; file <= FILE_H; file++) {
+                for(file = FILE_A; file <= FILE_H; file++)
+                {
                         sq = FR2SQ(file,rank);
                         piece = pos->pieces[sq];
                         printf("%3c",PceChar[piece]);
@@ -304,7 +327,8 @@ void PrintBoard(const S_BOARD *pos) {
         }
 
         printf("\n   ");
-        for(file = FILE_A; file <= FILE_H; file++) {
+        for(file = FILE_A; file <= FILE_H; file++)
+        {
                 printf("%3c",'a'+file);
         }
         printf("\n");

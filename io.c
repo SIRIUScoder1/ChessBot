@@ -10,7 +10,8 @@
 // b2b4 moving from b2 to b4
 // g2g8n moving and promoting the peice and n shows the the thing to which it is promoted to
 
-char *PrSq(const int sq) {
+char *PrSq(const int sq)
+{
 
         static char SqStr[3];
 
@@ -26,7 +27,8 @@ char *PrSq(const int sq) {
 
 }
 
-char *PrMove(const int move) {
+char *PrMove(const int move)
+{
 
         static char MvStr[6];
         // file from and the rank from
@@ -39,17 +41,25 @@ char *PrMove(const int move) {
 
         int promoted = PROMOTED(move);
 
-        if(promoted) {
+        if(promoted)
+        {
                 char pchar = 'q';
-                if(IsKn(promoted)) {
+                if(IsKn(promoted))
+                {
                         pchar = 'n';
-                } else if(IsRQ(promoted) && !IsBQ(promoted))  {
+                }
+                else if(IsRQ(promoted) && !IsBQ(promoted))
+                {
                         pchar = 'r';
-                } else if(!IsRQ(promoted) && IsBQ(promoted))  {
+                }
+                else if(!IsRQ(promoted) && IsBQ(promoted))
+                {
                         pchar = 'b';
                 }
                 sprintf(MvStr, "%c%c%c%c%c", ('a'+ff), ('1'+rf), ('a'+ft), ('1'+rt), pchar);
-        } else {
+        }
+        else
+        {
                 sprintf(MvStr, "%c%c%c%c", ('a'+ff), ('1'+rf), ('a'+ft), ('1'+rt));
         }
 
@@ -57,43 +67,49 @@ char *PrMove(const int move) {
 }
 //function that passes a move
 // take a move g7g8q e1g1
-int ParseMove(char *ptrChar, S_BOARD *pos) {
+int ParseMove(char *ptrChar, S_BOARD *pos)
+{
 
         //checking a valid move
-
         if(ptrChar[1] > '8' || ptrChar[1] < '1') return NOMOVE;
         if(ptrChar[3] > '8' || ptrChar[3] < '1') return NOMOVE;
         if(ptrChar[0] > 'h' || ptrChar[0] < 'a') return NOMOVE;
         if(ptrChar[2] > 'h' || ptrChar[2] < 'a') return NOMOVE;
 
-        int from = FR2SQ(ptrChar[0] - 'a', ptrChar[1] - '1');         // getting from and to squares
+        int from = FR2SQ(ptrChar[0] - 'a', ptrChar[1] - '1');          // getting from and to squares
         int to = FR2SQ(ptrChar[2] - 'a', ptrChar[3] - '1');
 
         // printf("ptrChar:%s from:%d to:%d\n",ptrChar,from,to);
-
         ASSERT(SqOnBoard(from) && SqOnBoard(to));
 
         S_MOVELIST list[1];
         GenerateAllMoves(pos,list);
         int MoveNum = 0;
         int Move = 0;         //actual move we are going to return
-        int PromPce = EMPTY;         // promotion piece
-
+        int PromPce = EMPTY;          // promotion piece
         // loop through every single move and check which move has same from and to square
-
-
-        for(MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+        for(MoveNum = 0; MoveNum < list->count; ++MoveNum)
+        {
                 Move = list->moves[MoveNum].move;
-                if(FROMSQ(Move)==from && TOSQ(Move)==to) {
+                if(FROMSQ(Move)==from && TOSQ(Move)==to)
+                {
                         PromPce = PROMOTED(Move);
-                        if(PromPce!=EMPTY) {
-                                if(IsRQ(PromPce) && !IsBQ(PromPce) && ptrChar[4]=='r') {
+                        if(PromPce!=EMPTY)
+                        {
+                                if(IsRQ(PromPce) && !IsBQ(PromPce) && ptrChar[4]=='r')
+                                {
                                         return Move;
-                                } else if(!IsRQ(PromPce) && IsBQ(PromPce) && ptrChar[4]=='b') {
+                                }
+                                else if(!IsRQ(PromPce) && IsBQ(PromPce) && ptrChar[4]=='b')
+                                {
                                         return Move;
-                                } else if(IsRQ(PromPce) && IsBQ(PromPce) && ptrChar[4]=='q') {
+                                }
+                                else if(IsRQ(PromPce) && IsBQ(PromPce) && ptrChar[4]=='q')
+                                {
                                         return Move;
-                                } else if(IsKn(PromPce)&& ptrChar[4]=='n') {
+                                }
+                                else if(IsKn(PromPce)&& ptrChar[4]=='n')
+                                {
                                         return Move;
                                 }
                                 continue;
@@ -105,15 +121,17 @@ int ParseMove(char *ptrChar, S_BOARD *pos) {
         return NOMOVE;
 }
 
-void PrintMoveList(const S_MOVELIST *list) {
+void PrintMoveList(const S_MOVELIST *list)
+{
         int index = 0;
         int score = 0;
         int move = 0;
         //  taking a pointer to the move list walking through each move in the move list
         // and printing the move and the score
-        printf("MoveList:%d \n",list->count);
+        printf("MoveList:%d\n",list->count);
 
-        for(index = 0; index < list->count; ++index) {
+        for(index = 0; index < list->count; ++index)
+        {
 
                 move = list->moves[index].move;
                 score = list->moves[index].score;

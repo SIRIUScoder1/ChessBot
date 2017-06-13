@@ -5,11 +5,14 @@
 
 long leafNodes;
 
-void Perft(int depth, S_BOARD *pos) {  // counting the leaf nodes and calculate all the legal moves
+void Perft(int depth, S_BOARD *pos)
+{
+        // counting the leaf nodes and calculate all the legal moves
 
         ASSERT(CheckBoard(pos));
 
-        if(depth == 0) {
+        if(depth == 0)
+        {
                 leafNodes++;
                 return;
         }
@@ -18,9 +21,11 @@ void Perft(int depth, S_BOARD *pos) {  // counting the leaf nodes and calculate 
         GenerateAllMoves(pos,list);
 
         int MoveNum = 0;
-        for(MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+        for(MoveNum = 0; MoveNum < list->count; ++MoveNum)
+        {
 
-                if ( !MakeMove(pos,list->moves[MoveNum].move))  {
+                if ( !MakeMove(pos,list->moves[MoveNum].move))
+                {
                         continue;
                 }
                 Perft(depth - 1, pos);
@@ -31,7 +36,8 @@ void Perft(int depth, S_BOARD *pos) {  // counting the leaf nodes and calculate 
 }
 
 
-void PerftTest(int depth, S_BOARD *pos) {
+void PerftTest(int depth, S_BOARD *pos)
+{
 
         ASSERT(CheckBoard(pos));
 
@@ -44,9 +50,11 @@ void PerftTest(int depth, S_BOARD *pos) {
 
         int move;
         int MoveNum = 0;
-        for(MoveNum = 0; MoveNum < list->count; ++MoveNum) {
+        for(MoveNum = 0; MoveNum < list->count; ++MoveNum)
+        {
                 move = list->moves[MoveNum].move;
-                if ( !MakeMove(pos,move))  {
+                if ( !MakeMove(pos,move))
+                {
                         continue;
                 }
                 long cumnodes = leafNodes;

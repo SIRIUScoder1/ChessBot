@@ -58,29 +58,32 @@ enum { FALSE, TRUE };
 enum { WKCA = 1, WQCA = 2, BKCA = 4, BQCA = 8 };
 //  WHITE KING SIDE CASTLING, WHITE QUEEN SIDE CASTLING, BLACK KING SIDE CASTLING, BLACK QUEEN SIDE CASTLING
 
-typedef struct {
+typedef struct
+{
         int move; //storing all the information about the move
         int score;
 } S_MOVE;
 // storng all possible moves in move list in array
-
-typedef struct {
+typedef struct
+{
         S_MOVE moves[MAXPOSITIONMOVES]; // storing the moves
         int count; //number of moves on movelist
 } S_MOVELIST;
 
-typedef struct {
+typedef struct
+{
         U64 posKey; //storing the position key if the alpha changes
         int move; //storing the move
 } S_PVENTRY;
 //undo function for a move
-
-typedef struct {
-        S_PVENTRY *pTable; //hash table
+typedef struct
+{
+        S_PVENTRY *pTable;  //hash table
         int numEntries;
 } S_PVTABLE;
 
-typedef struct {
+typedef struct
+{
 
         int move; //current move played
         //below are statuses before the move was made
@@ -91,7 +94,8 @@ typedef struct {
 
 } S_UNDO;
 
-typedef struct {
+typedef struct
+{
 
         int pieces[BRD_SQ_NUM];
         U64 pawns[3]; // 00100000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
@@ -99,21 +103,21 @@ typedef struct {
         int KingSq[2];
 
         int side; //current side to move
-        int enPas;   //if there is any one active
-        int fiftyMove;  //for one side max plays fifty moves
+        int enPas;  //if there is any one active
+        int fiftyMove;   //for one side max plays fifty moves
 
         int ply;  // how many half moves in currnet search
         int hisPly; //total game moves played so far
 
         int castlePerm;
 
-        U64 posKey;  //unique key for each position generated
+        U64 posKey; //unique key for each position generated
 
-        int pceNum[13]; //number of pieces on the board
-        int bigPce[2];   //any piece other than pawn   -- white, black
+        int pceNum[13]; //unique key for each position generated
+        int bigPce[2];  //any piece other than pawn   -- white, black
         int majPce[2];   //rooks and queens numbers    -- white, black
-        int minPce[2];     //bishops and knights numbers -- white, black
-        int material[2];  // values of material scores black and white
+        int minPce[2];  //bishops and knights numbers -- white, black
+        int material[2]; // values of material scores black and white
 
         S_UNDO history[MAXGAMEMOVES];
 
@@ -127,34 +131,28 @@ typedef struct {
         // when a piece or move beats alpha we will increment(+1) and change the values in the array
         int searchKillers[2][MAXDEPTH];
         //two moves that recently caused beta cuttoff (move ordering)
-
         //  plist[wN][0] = E1;
         // plist[wN][1] = D4;.......NO_square returned when last element
-
 } S_BOARD;
 
-typedef struct {
-
+typedef struct
+{
         // how long the chess bot will think for
-
         int starttime;
         int stoptime;
         int depth;
-        int depthset;
         int timeset;
         int movestogo;
-        int infinite;
 
-        long nodes;  // count the number of position the bot visits in a search tree
+        long nodes; // count the number of position the bot visits in a search tree
 
         int quit;
         int stopped;  // stop seaching (signal sent through gui)
 
         float fh; //fail high
-        float fhf;   // fail high first
+        float fhf;  // fail high first
 
 } S_SEARCHINFO;
-
 
 // when we have bits for a number
 // 1 2 4 8 16 32 64 128  we need upto seven bits to represent a MOVE
@@ -174,12 +172,12 @@ typedef struct {
 #define CAPTURED(m) (((m)>>14) & 0xF)
 #define PROMOTED(m) (((m)>>20) & 0xF)
 
-#define MFLAGEP 0x40000  // enpassent SQUARE MOVE
+#define MFLAGEP 0x40000 // enpassent SQUARE MOVE
 #define MFLAGPS 0x80000
 #define MFLAGCA 0x1000000
 
 #define MFLAGCAP 0x7C000  //captered piece or not and which one is it
-#define MFLAGPROM 0xF00000   // promoted pawn to which piece
+#define MFLAGPROM 0xF00000  // promoted pawn to which piece
 
 #define NOMOVE 0
 
@@ -215,7 +213,6 @@ extern char SideChar[];
 extern char RankChar[];
 extern char FileChar[];
 
-
 extern int PieceBig[13];    //bigPieces
 extern int PieceMaj[13];    //major pieces
 extern int PieceMin[13];    //minor pieces
@@ -226,7 +223,6 @@ extern int PiecePawn[13];
 extern int FilesBrd[BRD_SQ_NUM];
 extern int RanksBrd[BRD_SQ_NUM];
 // is a piece a knight, king, rook or queen, bishop or queen
-
 extern int PieceKnight[13];
 extern int PieceKing[13];
 extern int PieceRookQueen[13];
@@ -274,6 +270,7 @@ extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 extern void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list);
 extern int MoveExists(S_BOARD *pos, const int move);
 extern int InitMvvLva();
+
 // makemove.c
 extern int MakeMove(S_BOARD *pos, int move);
 extern void TakeMove(S_BOARD *pos);
@@ -287,6 +284,7 @@ extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
 // misc.c
 extern int GetTimeMs();
 extern void ReadInput(S_SEARCHINFO *info);
+
 // pvtable.c
 extern void InitPvTable(S_PVTABLE *table);
 extern void StorePvMove(const S_BOARD *pos, const int move);
@@ -297,6 +295,7 @@ extern void ClearPvTable(S_PVTABLE *table);
 // evaluate.c
 extern int EvalPosition(const S_BOARD *pos);
 
-//uci.c
+// uci.c
 extern void Uci_Loop();
+
 #endif

@@ -4,15 +4,18 @@
 
 #include "stdio.h"
 #include "defs.h"
-#include "string.h"
 
 #ifdef WIN32
 #include "windows.h"
 #else
 #include "sys/time.h"
+#include "sys/select.h"
+#include "unistd.h"
+#include <string.h>
 #endif
 
-int GetTimeMs() {
+int GetTimeMs()
+{
 #ifdef WIN32
         return GetTickCount();   // time elapsed since system has started
 #else
@@ -28,7 +31,7 @@ int InputWaiting()
 {
     #ifndef WIN32
         fd_set readfds;
-
+        struct timeval tv;
         FD_ZERO (&readfds);
         FD_SET(fileno(stdin),&readfds);
         tv.tv_sec = 0;
@@ -55,11 +58,12 @@ int InputWaiting()
         {
                 if(!PeekNamedPipe(inh,NULL,0,NULL, &dw,NULL))
                         return 1;
-                else
-                {
-                        GetNumberOfConsoleInputEvents(inh,&dw);
-                        return dw <= 1 ? 0 : dw;
-                }
+                return dw;
+        }
+        else
+        {
+                GetNumberOfConsoleInputEvents(inh,&dw);
+                return dw <= 1 ? 0 : dw;
         }
       #endif
 }
