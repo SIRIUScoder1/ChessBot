@@ -83,11 +83,12 @@ All possible moves are generated to every possible square it can go on the board
     
 
  ## Screenshots:
- 
+  ### Game play logs
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output1.png) 
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output2.png)
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output3.png)
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output4.png)
+  ### Chess Engine logs
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output5.png)
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output6.png)
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output7.png)
