@@ -72,9 +72,16 @@ All possible moves are generated to every possible square it can go on the board
   
   The complication is when a search depth is 3 or greater is performed, because both players can make choices which affect the game tree. Now the maintenance of both lower and upper bound (Alpha and Beta) is required. Maintenance of a lower bound is a must because if a move is very bad then we don't consider it and also the maintenance of upper bound is a major thing, because if move at depth 3 or higher leads to a good position, then other won't allow that, because there was already a better move higher up in game tree that will avoid this situation. One player's lower bound is the other player's upper bound.
   
- <br/>
- <br/>
+ - #### HANDLING MATERIAL COUNT
+    In game programming especially when it comes to games like chess there is way to store a sequence of moves which the particular game engine considers as the best and plans it to play as the game progresses. This is called the principal variation and moves are stored in a table format known as PV table or principal variation table. In this all the nodes of the game tree are included and as an iterative deepening is done it is very important to have a particular type of move ordering which will play the PV, collected during each iteration. Generally it’s a good practice to print the PV table every time it changes or a new depth is reached because it helps analyzing the game situation and flow during the course of the game.
  
+ - #### SELECTION OF MOST OPTIMAL MOVES
+    For an alpha-beta to function properly, the best moves are needed to be searched first. This is true for Principal Variation nodes and the probable cut-nodes. The main motive is to be as close to the minimum tree as possible. 
+    The Cut-nodes are, the best move is not always the cheapest rejection. When inside the iterative deepening framework, it is tried that the principal variation of the previous one is as leftmost path of the next on, which a triangular PV table applies explicitly. 
+    Earlier the alpha best value is reached more the further search becomes less costly because the search window becomes very less. Though the principal variation requires to search better moves thatâAZs why researching is done regularly. Move ordering can be controlled to the certain extent if the draft and the ply from the root are considered. The more closer to the root, less is the horizon effect, to better score evaluation, storing of moves becomes easy and game flow can be analyzed.
+    There is another type of move which is called the killer moves. These are quiet moves which are generally played whenever the player is having a beta-cutoff and the sibling node is cut, or any other earlier branch in the tree which has the same ply dis-tance to the root. The main goal is to move immediately direct just after a possible available move from the substitution table and the winning capture moves. This is the simplest and quiet efficient move ordering technique.
+    
+
  ## Screenshots:
  
   ![image](https://github.com/SIRIUScoder1/ChessBot/blob/master/images/output1.png) 
